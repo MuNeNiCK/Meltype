@@ -578,6 +578,8 @@ internal static class LanguageLearningTests
                 // Issue #12: ローマ字として読めてしまう英単語 (feature → ふぇあつれ)。日本語の中でも英字
                 ("feature", "feature"), ("future", "future"), ("nature", "nature"), ("remote", "remote"), ("online", "online"),
                 ("atarashiifeaturewotsuika", "あたらしいfeatureをついか"), ("kyouharemotedesu", "きょうはremoteです"),
+                // Issue #77: reflect の後ろの日本語まで英字判定に巻き込まない
+                ("reflectsareta", "reflectされた"),
             })
             {
                 var k = new CompositionTests.Keyboard();
