@@ -116,6 +116,10 @@ public sealed class CompositionText
                    !(char.IsAsciiLetterUpper(last.Raw[0]) && _units.Count >= 2 && _units[^2].Raw is { Length: > 0 } before && char.IsAsciiLetterUpper(before[^1])) &&
                    // 英単語の最後の l / x (hotel の l) は、次の文字と合わせて小書き文字 (lya = ゃ) にしない。
                    !(last.Raw is "l" or "x" or "L" or "X" && EndsWithEnglishWordFromUnit(_units.Count)) &&
+                   // 英単語の末尾が子音 + t (reflect の ct) で、次に s が来たときは、末尾の子音を読み直しに戻さない。
+                   // 戻すと reflect + sareta の c + t + s + a が c + tsa (cつぁ) になり、reflect の区切りを失う。
+                   !(_pending.Length == 1 && _pending[0] is 't' or 'T' && c is 's' or 'S' &&
+                     EndsWithEnglishWordFromUnit(_units.Count, _pending.ToString())) &&
                    // 英単語の最後の t (commit の t) も、続けて打った s と合わせて ts (つ) にしない。
                    !(last.Raw is "t" or "T" && _pending.Length > 0 && _pending[0] is 's' or 'S' && EndsWithEnglishWordFromUnit(_units.Count)))
             {
