@@ -38,6 +38,19 @@ if(BUILD_TESTING)
     file(COPY /usr/share/fcitx5/addon/keyboard.conf DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/test/addon)
     get_target_property(FCITX5_CORE_LOCATION Fcitx5::Core LOCATION)
     get_filename_component(FCITX5_LIB_DIR ${FCITX5_CORE_LOCATION} DIRECTORY)
+    add_executable(testpopup test/testpopup.cpp)
+    set_target_properties(testpopup PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
+    if(Fcitx5Core_VERSION VERSION_GREATER_EQUAL 5.1.16)
+        set_target_properties(testpopup PROPERTIES CXX_STANDARD 20)
+    endif()
+    target_compile_definitions(testpopup PRIVATE
+        FCITX5_MELTYPE_BINARY_DIR="${CMAKE_CURRENT_BINARY_DIR}"
+        FCITX5_SYSTEM_ADDON_DIR="${FCITX5_LIB_DIR}/fcitx5")
+    target_link_libraries(testpopup PRIVATE Fcitx5::Core Fcitx5::Utils Fcitx5::Module::TestFrontend)
+    add_dependencies(testpopup meltype)
+    add_test(NAME testpopup-manual COMMAND testpopup manual)
+    add_test(NAME testpopup-spelling COMMAND testpopup spelling)
+
     add_executable(testmeltype test/testmeltype.cpp)
     set_target_properties(testmeltype PROPERTIES CXX_STANDARD 17 CXX_STANDARD_REQUIRED ON)
     # fcitx5 5.1.16 以降の fcitx-utils/log.h は std::source_location を使うため、C++20 が要る
