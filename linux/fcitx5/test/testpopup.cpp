@@ -85,7 +85,9 @@ bool manualProposal(Instance *instance, AddonInstance *frontend, bool legacy) {
     press(frontend, uuid, "Return");
     if (!expect(ic->inputPanel().clientPreedit().empty() && ic->inputPanel().auxDown().empty(), "確定後に表示を閉じる")) return false;
     frontend->call<ITestFrontend::destroyInputContext>(uuid);
-    std::cout << "PASS: 手動判定の提案・採用・確定を、長い固定ガイドなしで表示する\n";
+    std::cout << (legacy
+        ? "PASS: 旧 Native の固定ガイドを保ち、手動判定の提案・採用・確定を表示する\n"
+        : "PASS: 手動判定の提案・採用・確定を、長い固定ガイドなしで表示する\n");
     return true;
 }
 

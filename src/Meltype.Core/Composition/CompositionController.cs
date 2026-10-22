@@ -2943,6 +2943,7 @@ public sealed class CompositionController
             if (contextHint is not null) hint = contextHint + "　" + hint;
             var preview = PreviewCandidates();
             var misspelling = MisspellingSuggestion();
+            // 手動の英字提案・訂正提案がある間は予測を出さないため、contextHint の両方の案内は同時に出ない。
             UpdatePredictions(blocked: misspelling is not null || suggestion is not null);
             if (_predictions.Count > 0)
             {
